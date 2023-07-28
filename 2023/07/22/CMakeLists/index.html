@@ -1,0 +1,390 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>CMakeLists.txt入门到大成 | 听雨</title><meta name="author" content="W.Zhow"><meta name="copyright" content="W.Zhow"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="借用黑格尔的名言“存在即合理”，既然CMakeList.txt被设计出来，就有它的一个道理！这样想来！我们内心对它的畏惧是不是就减少了呢！那~现在让我们从“它为什么存在”，“它是什么”以及“它怎么用”三个角度深刻剖析！">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CMakeLists.txt入门到大成">
+<meta property="og:url" content="http://example.com/2023/07/22/CMakeLists/index.html">
+<meta property="og:site_name" content="听雨">
+<meta property="og:description" content="借用黑格尔的名言“存在即合理”，既然CMakeList.txt被设计出来，就有它的一个道理！这样想来！我们内心对它的畏惧是不是就减少了呢！那~现在让我们从“它为什么存在”，“它是什么”以及“它怎么用”三个角度深刻剖析！">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/img/4.webp">
+<meta property="article:published_time" content="2023-07-21T16:00:00.000Z">
+<meta property="article:modified_time" content="2023-07-23T16:00:00.000Z">
+<meta property="article:author" content="W.Zhow">
+<meta property="article:tag" content="C++">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/img/4.webp"><link rel="shortcut icon" href="/img/logo2.webp"><link rel="canonical" href="http://example.com/2023/07/22/CMakeLists/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><meta/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: true
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'CMakeLists.txt入门到大成',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2023-07-24 00:00:00'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+    win.getCSS = (url,id = false) => new Promise((resolve, reject) => {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = url
+      if (id) link.id = id
+      link.onerror = reject
+      link.onload = link.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        link.onload = link.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(link)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><link rel="stylesheet" href="/css/side.css"><style>#article-container.post-content h1:before, h2:before, h3:before, h4:before, h5:before, h6:before { -webkit-animation: avatar_turn_around 1s linear infinite; -moz-animation: avatar_turn_around 1s linear infinite; -o-animation: avatar_turn_around 1s linear infinite; -ms-animation: avatar_turn_around 1s linear infinite; animation: avatar_turn_around 1s linear infinite; }</style><link rel="stylesheet" href="/css/nav_menu.css"><script defer src="js/switchDarkMode.js"></script><script defer src="/js/nav_menu.js"></script><!-- hexo injector head_end start --><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Zfour/Butterfly-double-row-display@1.00/cardlistpost.min.css"/>
+<style>#recent-posts > .recent-post-item >.recent-post-info > .article-meta-wrap > .tags:before {content:"\A";
+  white-space: pre;}#recent-posts > .recent-post-item >.recent-post-info > .article-meta-wrap > .tags > .article-meta__separator{display:none}</style>
+<link rel="stylesheet" href="https://npm.elemecdn.com/hexo-butterfly-swiper/lib/swiper.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://npm.elemecdn.com/hexo-butterfly-swiper/lib/swiperstyle.css" media="print" onload="this.media='all'"><!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.3.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/qq.jpeg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">7</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">5</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div><div class="menus_item"><a class="site-page" href="/guestbook/"><i class="fa-fw fa fa-book"></i><span> 留言板</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/4.webp')"><nav id="nav"><span id="blog_name"><div class="back-home-button" tabindex="-1"><i class="back-home-button-icon fas fa-grip-vertical"></i><div class="back-menu-list-groups"><div class="back-menu-list-group"><div class="back-menu-list-title"> </div><div class="back-menu-list"><a class="back-menu-item" href="https://weread.qq.com" title="微信读书" target="_blank" one-link-mark="yes"><img class="back-menu-item-icon" src="https://rescdn.qqmail.com/node/wr/wrpage/style/images/independent/appleTouchIcon/apple-touch-icon-72x72.png"/><span class="back-menu-item-text">微信读书</span></a></div></div><div class="back-menu-list-group"><div class="back-menu-list-title"> </div><div class="back-menu-list"></div></div></div></div><a id="site-name" href="/"><div class="title">听雨</div><i class="fa-solid fa-house"></i></a></span><div class="mask-name-container"><center id="name-container"><a id="page-name" href="javascript:btf.scrollToDest(0, 500)">PAGE_NAME</a></center></div><div id="weather"></div><div id="tp-weather-widget"></div> <div id="menus"><div class="nav-button" id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="nav-button" id="darkmode_navswitch"><a class="darkmode_switchbutton" type="button" title="浅色和深色模式转换" onclick="switchDarkMode()"><i class="fas fa-adjust"></i></a></div><div class="nav-button" id="nav-totop"><a class="totopbtn"><i class="fas fa-arrow-up"></i><span id="percent" onclick="btf.scrollToDest(0,500)">0</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div><div class="menus_item"><a class="site-page" href="/guestbook/"><i class="fa-fw fa fa-book"></i><span> 留言板</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">CMakeLists.txt入门到大成</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="fa-fw post-meta-icon far fa-calendar-alt"></i><span class="post-meta-label">发表于</span><time datetime="2023-07-21T16:00:00.000Z" title="发表于 2023-07-22 00:00:00">2023-07-22</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/C/">C++</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/C/CMake/">CMake</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="CMakeLists.txt入门到大成"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="CMakeLists-txt编写入门"><a href="#CMakeLists-txt编写入门" class="headerlink" title="CMakeLists.txt编写入门"></a>CMakeLists.txt编写入门</h1><p>借用黑格尔的名言“<strong>存在即合理</strong>”，既然CMakeList.txt被设计出来，就有它的一个道理！这样想来！我们内心对它的畏惧是不是就减少了呢！那~现在让我们从“它为什么存在”，“它是什么”以及“它怎么用”三个角度深刻剖析！</p>
+<hr>
+<h2 id="为什么存在？"><a href="#为什么存在？" class="headerlink" title="为什么存在？"></a>为什么存在？</h2><p>我们刚开始学C++中的“Hello World”时，是通过用g++编译器对该cpp进行编译生成可执行文件(g++ main.cpp -o main)。当涉及大型项目，需要用到大量库的时候，采用这种编译方式是极其繁琐的。因此，能不能用一个脚本文件来编译源代码文件，于是Makefile作为一个自动化编译脚本应运而生。然而，它语法实在过于繁琐，如果能有更简单的配置文件就好，能自动化生成Makefile文件。所以，CMakeLists.txt(Cmake)就设计出来了。当然，这只是其中的部分原因，更重要的是有了它，我们能在不同操作系统运行(与操作系统解耦)，也就是别人写的代码，也能在我的操作系统上编译运行。</p>
+<p>看到这，大家的思路应该也清晰了，总结一下：CMakeLists.txt存在的原因是：</p>
+<ol>
+<li><strong><font color = "red">解决跨平台编译问题</strong></font></li>
+<li><strong><font color = "red">使项目构建过程更简单、灵活</font></strong></li>
+</ol>
+<p><strong>历史渊源：</strong>在早期，开发人员需要针对每个平台编写不同的构建系统脚本，例如Makefile（Unix-like系统）、Visual Studio项目文件（Windows）等。这导致了构建过程的繁琐和维护困难，特别是对于跨平台项目。为了解决这个问题，CMake在2000年由Kitware公司开发出来。</p>
+<p><strong>注</strong>：</p>
+<p><strong>常见操作系统：</strong>(<strong><font color = 'red'>系统软件；硬件和软件的中介；提供管理硬件接口</strong></font>)</p>
+<p>Window: 微软开发，用于个人电脑和服务器系统</p>
+<p>Linux: 基于开源Linux内核的操作系统，有许多不同的发行版，如Ubuntu、Debian、Fedora、CentOS等</p>
+<p>Unix: 多用户、多任务的操作系统家族，包括类似BSD、Solaris等不同的版本</p>
+<p>macOS: 苹果开发，用于苹果的Mac系列电脑</p>
+<p>iOS: 苹果 开发，用于iPhone、iPad和iPod Touch</p>
+<p>Android: 谷歌开发，用于智能手机和平板电脑</p>
+<p><strong>系统脚本：</strong>一种计算机程序。（程序由指令组成，指令像命令)</p>
+<p><strong>Makefile：</strong>一种自动化编译的脚本文件，定义了项目的构建规则和依赖关系。</p>
+<p><strong>Make:</strong> 一种自动化构建和编译工具。Make根据这个Makefile来判断哪些文件需要重新编译，然后调用相应的编译器（例如g++）来完成编译过程。</p>
+<p><strong>Cmake:</strong> 一种跨平台的开源构建工具。</p>
+<p><strong>CMakeLists.txt:</strong> 是Cmake的脚本文件</p>
+<p><strong>关系：</strong>CMakeList.txt通过Cmake指令来生成Makefile文件，Makefile文件再通过make指令自动化编译C++源代码。</p>
+<h2 id="是什么？"><a href="#是什么？" class="headerlink" title="是什么？"></a>是什么？</h2><p>CMakeLists: 是一个脚本文件，通过CMake指令编写，允许开发者灵活地配置和管理C&#x2F;C++项目的构建过程。使用CMakeLists.txt文件，开发者可以实现一次编写，多平台编译的效果，方便地在不同操作系统和编译器上构建项目，从而提高项目的可移植性和开发效率。</p>
+<p>CMake：是一个跨平台的构建工具，用于生成适用于不同操作系统和编译器的本地构建文件（如Makefile、Visual Studio项目文件等）。CMake使用一个名为”CMakeLists.txt”的脚本文件来描述项目的构建配置。通过CMake，开发者可以将项目的构建过程和依赖管理与特定的编译器和操作系统解耦，从而实现跨平台的构建支持。</p>
+<h2 id="怎么用？"><a href="#怎么用？" class="headerlink" title="怎么用？"></a>怎么用？</h2><p>先来个复杂的CMakeLists文件，先直观上感受一下：</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">cmake_minimum_required</span>(VERSION <span class="number">2.8</span>.<span class="number">3</span>)</span><br><span class="line"><span class="keyword">project</span>(lio_sam)</span><br><span class="line"></span><br><span class="line"><span class="keyword">set</span>(CMAKE_BUILD_TYPE <span class="string">&quot;Release&quot;</span>)</span><br><span class="line"><span class="keyword">set</span>(CMAKE_CXX_FLAGS <span class="string">&quot;-std=c++11&quot;</span>)</span><br><span class="line"><span class="keyword">set</span>(CMAKE_CXX_FLAGS_RELEASE <span class="string">&quot;-O3 -Wall -g -pthread&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">find_package</span>(catkin REQUIRED COMPONENTS</span><br><span class="line">  tf</span><br><span class="line">  roscpp</span><br><span class="line">  rospy</span><br><span class="line">  cv_bridge</span><br><span class="line">  <span class="comment"># pcl library</span></span><br><span class="line">  pcl_conversions</span><br><span class="line">  <span class="comment"># msgs</span></span><br><span class="line">  std_msgs</span><br><span class="line">  sensor_msgs</span><br><span class="line">  geometry_msgs</span><br><span class="line">  nav_msgs</span><br><span class="line">  message_generation</span><br><span class="line">  visualization_msgs</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">find_package</span>(OpenMP REQUIRED)</span><br><span class="line"><span class="keyword">find_package</span>(PCL REQUIRED QUIET)</span><br><span class="line"><span class="keyword">find_package</span>(OpenCV REQUIRED QUIET)</span><br><span class="line"><span class="keyword">find_package</span>(GTSAM REQUIRED QUIET)</span><br><span class="line"><span class="keyword">find_package</span>(Boost REQUIRED COMPONENTS timer)</span><br><span class="line"></span><br><span class="line">add_message_files(</span><br><span class="line">  DIRECTORY msg</span><br><span class="line">  FILES</span><br><span class="line">  cloud_info.msg</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">add_service_files(</span><br><span class="line">  DIRECTORY srv</span><br><span class="line">  FILES</span><br><span class="line">  save_map.srv</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">generate_messages(</span><br><span class="line">  DEPENDENCIES</span><br><span class="line">  geometry_msgs</span><br><span class="line">  std_msgs</span><br><span class="line">  nav_msgs</span><br><span class="line">  sensor_msgs</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">catkin_package(</span><br><span class="line">  INCLUDE_DIRS <span class="keyword">include</span></span><br><span class="line">  DEPENDS PCL GTSAM</span><br><span class="line"></span><br><span class="line">  CATKIN_DEPENDS</span><br><span class="line">  std_msgs</span><br><span class="line">  nav_msgs</span><br><span class="line">  geometry_msgs</span><br><span class="line">  sensor_msgs</span><br><span class="line">  message_runtime</span><br><span class="line">  message_generation</span><br><span class="line">  visualization_msgs</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment"># include directories</span></span><br><span class="line"><span class="keyword">include_directories</span>(</span><br><span class="line">	<span class="keyword">include</span></span><br><span class="line">	<span class="variable">$&#123;catkin_INCLUDE_DIRS&#125;</span></span><br><span class="line">	<span class="variable">$&#123;PCL_INCLUDE_DIRS&#125;</span></span><br><span class="line">  <span class="variable">$&#123;OpenCV_INCLUDE_DIRS&#125;</span></span><br><span class="line">	<span class="variable">$&#123;GTSAM_INCLUDE_DIR&#125;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment"># link directories</span></span><br><span class="line"><span class="keyword">link_directories</span>(</span><br><span class="line">	<span class="keyword">include</span></span><br><span class="line">	<span class="variable">$&#123;PCL_LIBRARY_DIRS&#125;</span></span><br><span class="line">  <span class="variable">$&#123;OpenCV_LIBRARY_DIRS&#125;</span></span><br><span class="line">  <span class="variable">$&#123;GTSAM_LIBRARY_DIRS&#125;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment">###########</span></span><br><span class="line"><span class="comment">## Build ##</span></span><br><span class="line"><span class="comment">###########</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Range Image Projection</span></span><br><span class="line"><span class="keyword">add_executable</span>(<span class="variable">$&#123;PROJECT_NAME&#125;</span>_imageProjection src/imageProjection.cpp)</span><br><span class="line"><span class="keyword">add_dependencies</span>(<span class="variable">$&#123;PROJECT_NAME&#125;</span>_imageProjection <span class="variable">$&#123;catkin_EXPORTED_TARGETS&#125;</span> <span class="variable">$&#123;PROJECT_NAME&#125;</span>_generate_messages_cpp)</span><br><span class="line"><span class="keyword">target_link_libraries</span>(<span class="variable">$&#123;PROJECT_NAME&#125;</span>_imageProjection <span class="variable">$&#123;catkin_LIBRARIES&#125;</span> <span class="variable">$&#123;PCL_LIBRARIES&#125;</span> <span class="variable">$&#123;OpenCV_LIBRARIES&#125;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Feature Association</span></span><br><span class="line"><span class="keyword">add_executable</span>(<span class="variable">$&#123;PROJECT_NAME&#125;</span>_featureExtraction src/featureExtraction.cpp)</span><br><span class="line"><span class="keyword">add_dependencies</span>(<span class="variable">$&#123;PROJECT_NAME&#125;</span>_featureExtraction <span class="variable">$&#123;catkin_EXPORTED_TARGETS&#125;</span> <span class="variable">$&#123;PROJECT_NAME&#125;</span>_generate_messages_cpp)</span><br><span class="line"><span class="keyword">target_link_libraries</span>(<span class="variable">$&#123;PROJECT_NAME&#125;</span>_featureExtraction <span class="variable">$&#123;catkin_LIBRARIES&#125;</span> <span class="variable">$&#123;PCL_LIBRARIES&#125;</span> <span class="variable">$&#123;OpenCV_LIBRARIES&#125;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Mapping Optimization</span></span><br><span class="line"><span class="keyword">add_executable</span>(<span class="variable">$&#123;PROJECT_NAME&#125;</span>_mapOptmization src/mapOptmization.cpp)</span><br><span class="line"><span class="keyword">add_dependencies</span>(<span class="variable">$&#123;PROJECT_NAME&#125;</span>_mapOptmization <span class="variable">$&#123;catkin_EXPORTED_TARGETS&#125;</span> <span class="variable">$&#123;PROJECT_NAME&#125;</span>_generate_messages_cpp)</span><br><span class="line"><span class="keyword">target_compile_options</span>(<span class="variable">$&#123;PROJECT_NAME&#125;</span>_mapOptmization PRIVATE <span class="variable">$&#123;OpenMP_CXX_FLAGS&#125;</span>)</span><br><span class="line"><span class="keyword">target_link_libraries</span>(<span class="variable">$&#123;PROJECT_NAME&#125;</span>_mapOptmization Boost::timer <span class="variable">$&#123;catkin_LIBRARIES&#125;</span> <span class="variable">$&#123;PCL_LIBRARIES&#125;</span> <span class="variable">$&#123;OpenCV_LIBRARIES&#125;</span> <span class="variable">$&#123;OpenMP_CXX_FLAGS&#125;</span> gtsam)</span><br><span class="line"></span><br><span class="line"><span class="comment"># IMU Preintegration</span></span><br><span class="line"><span class="keyword">add_executable</span>(<span class="variable">$&#123;PROJECT_NAME&#125;</span>_imuPreintegration src/imuPreintegration.cpp)</span><br><span class="line"><span class="keyword">target_link_libraries</span>(<span class="variable">$&#123;PROJECT_NAME&#125;</span>_imuPreintegration Boost::timer <span class="variable">$&#123;catkin_LIBRARIES&#125;</span> <span class="variable">$&#123;PCL_LIBRARIES&#125;</span> <span class="variable">$&#123;OpenCV_LIBRARIES&#125;</span> gtsam)</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>对于单个cpp文件，例如Hello World，CMakeLists.txt文件如下：</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">cmake_minimum_required</span>(VERSION <span class="number">2.8</span>.<span class="number">3</span>)</span><br><span class="line"><span class="keyword">project</span>(Main)</span><br><span class="line"><span class="keyword">add_executable</span>(main main.cpp)</span><br></pre></td></tr></table></figure>
+
+<p>在cmd终端输入下面指令即可运行：</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">mkdir build </span><br><span class="line">cd build</span><br><span class="line">cmake ..</span><br><span class="line">make</span><br><span class="line">./main</span><br></pre></td></tr></table></figure>
+
+<p>​		当我们安装了比较低的CMake时，试图编译高版本CMake的CMakeLists脚本文件，CMake 将会检测到版本不匹配，并报告错误。这是因为高版本的 CMakeLists.txt 可能包含了较低版本 CMake 不支持的新特性和语法。那该如何提醒告知开发人员呢？于是下列指令便产生：</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">cmake_minimum_required</span>(VERSION <span class="number">2.8</span>.<span class="number">3</span>)</span><br></pre></td></tr></table></figure>
+
+<p><strong><strong>作用：指定项目构建所需的最低 CMake 版本</strong></strong>。例如，<code>cmake_minimum_required(VERSION 3.10)</code> 表示项目需要 CMake 3.10 或更高版本才能构建，安装低于该版本的便报错！</p>
+<p>万物皆有名字，于是<code>project(name)</code>诞生了，它是给咱们项目取的名字。</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">project</span>(Main)</span><br></pre></td></tr></table></figure>
+
+<p>当你在命令行中运行CMake命令时，CMake会读取项目根目录下的CMakeLists.txt文件，并解析其中的内容。在这个过程中，CMake会自动生成一些内置变量，例如<code>CMAKE_SOURCE_DIR</code>、<code>CMAKE_BINARY_DIR</code>等，用于指示项目的源代码目录和构建目录的路径。常见内置变量如下：</p>
+<ol>
+<li><code>CMAKE_SOURCE_DIR</code>：当前 CMakeLists.txt 所在的源码目录的根路径。</li>
+<li><code>CMAKE_BINARY_DIR</code>：构建目录的根路径，即构建生成的可执行文件、库和其他构建输出的存放位置。</li>
+<li><code>CMAKE_CURRENT_SOURCE_DIR</code>：当前处理的 CMakeLists.txt 所在的源码目录的路径。</li>
+<li><code>CMAKE_CURRENT_BINARY_DIR</code>：当前处理的 CMakeLists.txt 所在的构建目录的路径。</li>
+<li><code>CMAKE_CURRENT_LIST_DIR</code>：当前处理的 CMakeLists.txt 所在的路径（源码目录或构建目录）。</li>
+<li><code>CMAKE_CURRENT_LIST_LINE</code>：当前正在处理的 CMakeLists.txt 的行号。</li>
+<li><code>CMAKE_MODULE_PATH</code>：一个用于指定额外的 CMake 模块（.cmake 文件）的搜索路径的列表。</li>
+<li><code>CMAKE_INCLUDE_CURRENT_DIR</code>：如果设置为 <code>ON</code>，则在构建过程中自动将当前处理的 CMakeLists.txt 所在的目录添加到包含路径中。</li>
+<li><code>CMAKE_LIBRARY_OUTPUT_DIRECTORY</code>：库文件的输出目录。</li>
+<li><code>CMAKE_RUNTIME_OUTPUT_DIRECTORY</code>：可执行文件的输出目录</li>
+</ol>
+<p>第三行指令<code>add_executable</code>是将一个或多个源文件编译成可执行文件，有了它我们就能将C++生成可执行文件了</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">add_executable</span>(可执行文件名 cpp文件)</span><br></pre></td></tr></table></figure>
+
+<p>假设现在我们自己定义了一个库并且使用它，我们该如何编写CMakeLists文件？</p>
+<p>Main函数：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;Hello.h&quot;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">const</span> <span class="type">char</span> * <span class="type">const</span> *argv)</span></span>&#123;</span><br><span class="line">  <span class="built_in">Hello</span>();</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>自定义库：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">Hello</span><span class="params">()</span></span>&#123;</span><br><span class="line">    std::cout&lt;&lt;<span class="string">&quot;Hello World&quot;</span>&lt;&lt;std::endl;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>库头文件：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">ifndef</span> HELLO_H_</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> HELLO_H_</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">Hello</span><span class="params">()</span></span>;</span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br></pre></td></tr></table></figure>
+
+<p>文件组织形式：</p>
+<p>先端上CMakeLists结果：</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">cmake_minimum_required</span>(VERSION <span class="number">3.0</span>)</span><br><span class="line"><span class="keyword">project</span>(main)</span><br><span class="line"><span class="keyword">add_library</span>(shard_hello Hello.cpp)</span><br><span class="line"><span class="keyword">add_executable</span>(<span class="variable">$&#123;PROJECT_NAME&#125;</span> main.cpp)</span><br><span class="line"><span class="keyword">target_link_libraries</span>(<span class="variable">$&#123;PROJECT_NAME&#125;</span> shard_hello)</span><br></pre></td></tr></table></figure>
+
+<p>分别多了<code>add_library()</code>和<code>target_link_libraries()</code>，它俩有啥用呢？</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">add_library</span>(shard_hello Hello.cpp)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">add_library</span>(库名 cpp文件名)</span><br></pre></td></tr></table></figure>
+
+<p><code>add_library</code>作用：将Hello.cpp文件生成shard_hello 库文件，这个库文件会生成在哪文件夹里，默认是生成在build文件夹下，也是执行cmake的文件夹；</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">target_link_libraries</span>(可执行文件名 库的路径绝对或相对)</span><br></pre></td></tr></table></figure>
+
+<p><code>target_link_libraries</code>作用：将该库与其他目标（如可执行文件或其他库）进行链接；它怎么找到我指定的库文件呢？</p>
+<ol>
+<li>CMake 会首先在当前构建目录中查找要链接的库文件。这是因为 <code>add_library()</code> 命令生成的库文件默认会位于当前构建目录中。</li>
+<li>如果在 <code>target_link_libraries()</code> 命令中直接指定了库的绝对路径或相对路径，CMake 将会使用这个路径来链接库文件，而不再进行其他查找。</li>
+<li>库连接查找顺序：<ul>
+<li>如果在前两步中找不到要链接的库文件，CMake 将按照默认的库文件搜索路径进行查找。这些默认搜索路径可能包括系统标准路径和其他指定的路径。</li>
+<li>系统标准路径：CMake 会在系统预定义的标准路径中查找库文件，这些路径通常是编译器和操作系统默认的库搜索路径。例如，在 Linux 上，通常会在 <code>/usr/lib</code>、<code>/usr/local/lib</code> 等目录中查找。</li>
+<li><code>CMAKE_LIBRARY_PATH</code> 变量：您可以在 CMakeLists.txt 文件中使用 <code>set()</code> 命令设置 <code>CMAKE_LIBRARY_PATH</code> 变量，指定额外的库文件搜索路径。CMake 会在这些路径中查找库文件。</li>
+<li><code>CMAKE_PREFIX_PATH</code> 变量：这个变量通常用于指定第三方库的安装路径。CMake 会在 <code>CMAKE_PREFIX_PATH</code> 变量指定的路径中查找库文件。</li>
+<li>如果前面的步骤中找不到要链接的库文件，CMake 将根据库名字及库文件后缀来查找。CMake 会依次查找不同后缀的库文件（如 <code>.lib</code>、<code>.a</code>、<code>.dll</code> 等），直到找到匹配的库文件。</li>
+</ul>
+</li>
+</ol>
+<p>假设我们现在自己生成了库文件怎么办呢？下面是将Hello.cpp生成库文件Hello.a:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">g++ -c Hello.cpp -o Hello.o</span><br><span class="line">ar rcs Hello.a Hello.o    </span><br></pre></td></tr></table></figure>
+
+<p>这时候我们可以使用<code>link_librarie</code>，例如：</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">link_libraries</span>(<span class="string">&quot;C:\\Users\\zhouwei\\Desktop\\c++\\Hello.a&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>或</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">link_libraries</span>(<span class="string">&quot;C:/Users/zhouwei/Desktop/c++/Hello.a&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>在window下，上面的路径加不加双引号都可以的。</p>
+<p>注：</p>
+<p>静态库：库的代码会在编译时被复制并链接到可执行文件中，形成一个独立的可执行文件。静态库的优点是在运行时不需要依赖外部的库文件，使得可执行文件独立于系统环境运行。</p>
+<p>动态库：库的代码在编译时不会被复制到可执行文件中，而是在运行时由操作系统加载到内存中，多个程序可以共享同一个动态库。动态库的优点是节省了磁盘空间，并且在多个程序之间共享，减少了系统资源的浪费。</p>
+<p>window系统静态库和动态库后缀分别为<code>.lib</code>和<code>.dll</code>;</p>
+<p>linux系统里静态库和动态库后缀分别为<code>.a</code>和<code>.so</code>,</p>
+<p>C++中window绝对路径表示：例如：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">std::ifstream <span class="title">file1</span><span class="params">(<span class="string">&quot;C:\\Users\\user\\data\\example.txt&quot;</span>)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<p>C++中window相对路径表示：例如：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">std::ifstream <span class="title">file1</span><span class="params">(<span class="string">&quot;.\\data\\example.txt&quot;</span>)</span></span>; </span><br></pre></td></tr></table></figure>
+
+<p>C++中linux绝对路径表示，例如：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">std::ifstream <span class="title">file1</span><span class="params">(<span class="string">&quot;/home/user/data/example.txt&quot;</span>)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<p>C++中linux相对路径表示，例如：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">std::ifstream <span class="title">file1</span><span class="params">(<span class="string">&quot;./data/example.txt&quot;</span>)</span></span>; </span><br></pre></td></tr></table></figure>
+
+<p>不过，仅有.a 或.so 库文件的 话，我们并不知道它里头的函数到底是什么，调用的形式又是什么样的。为了让别人（或者自己）使用这个库，我们需要提供一个头文件，说明这些库里都有些什么。因此，对于库的使用者，只要拿到了头文件和库文件，就可以调用这个库了。</p>
+<p>说到这，不得不提一下<code>include_directories</code>这个命令；</p>
+<p>当我们在main函数中引入<code>#include &quot;Hello.h&quot;</code>头文件之后，它是怎么找到该头文件呢？</p>
+<p>首先它会在源码所在文件夹，即main.cpp所在的文件夹中查找，然后搜索<code>-I</code>指定的目录，接着搜索环境变量<code>C_INCLUDE_PATH</code>，<code>CPLUS_INCLUDE_PATH</code> 和 <code>CPATH</code> 指定的目录，最后搜索编译器内定的目录。</p>
+<p>接着上面的Hello程序，我们将Hello.h头文件单独放入到include文件中，此时编译失败，无法找到该头文件，该怎么办呢？</p>
+<p>两种解决方案：</p>
+<p>方案一：</p>
+<p>头文件改为如下，在CMakeLists.txt不写<code>include_directories</code>命令；</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;include/Hello.h&quot;</span></span></span><br></pre></td></tr></table></figure>
+
+<p>方案二：</p>
+<p>在CMakeLists.txt写<code>include_directories</code>命令</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">include_dirctories(<span class="keyword">include</span>)</span><br></pre></td></tr></table></figure>
+
+<p>总结：</p>
+<p><code>include_directories(dir)</code>等同于<code>-I</code>指令，用于指定头文件搜索路径，当include自己搜索不到头文件时，我们就可以使用它了，其中<code>dir</code>表示相对路径。</p>
+<hr>
+<p>上面将CMakeLists.txt中基本的命令说完了，回想一下下面命令的用法呀~</p>
+<p><code>include_directories</code>,<code>add_libraries</code>,<code>target_link_libraries()</code>，<code>link_libraries</code>和<code>add_executable</code>。</p>
+<p>接下来我们学习一下<code>find_package</code>指令，用法如下：</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">find_package</span>(package_name [version] [EXACT] [QUIET] [REQUIRED] [COMPONENTS components...])</span><br></pre></td></tr></table></figure>
+
+<p>这里的<code>package_name</code>是区分大小写的(例如把<code>OpenCV</code>写成opencv找不到该文件)，<code>version</code>指定查找库的版本，<code>EXACT</code>表示指定了该标准，则查找的库版本必须和指定版本一致，<code>QUIET</code>表示不输出查找信息，<code>REQUIRED</code>表示找不到就报错，<code>COMPONENTS components... </code>指定查找的库的组件。</p>
+<p>那是如何查找的呢？</p>
+<p><code>find_package</code>有两种搜索模式，分别是<code>Module</code>和<code>Config</code>模式</p>
+<p>默认采用<code>Module</code>,该模式在<code>CMAKE_MODULE_PAHT</code>和<code>CMAKE_ROOT</code>变量对应的路径下搜索，前者默认为空，后者则为<code>CMake</code>安装目录下，我电脑为<code>/usr/share/cmake-3.16</code>;</p>
+<p>若前一种模式未搜索到，则使用<code>Config</code>模式搜索，搜索方式如下：</p>
+<ol>
+<li>查找根目录</li>
+</ol>
+<ul>
+<li><p>查找<code>&lt;PackageName&gt;_DIR</code>的CMake变量或者环境变量，默认为空；</p>
+</li>
+<li><p>查找名为<code>CMAKE_PREFIX_PATH</code>、<code>CMAKE_FRAMEWORK_PATH</code>、<code>CMAKE_APPBUNDLE_PATH</code>的CMake变量或<strong>环境变量</strong>路径，默认均为空；</p>
+</li>
+<li><p>搜索<code>PATH</code>变量下各路径，先找该路径下是否有<code>&lt;PackageName&gt;Config.cmake</code>或<code>&lt;lower-case-package-name&gt;-config.cmake</code>的模块文件，如果该路径如果以bin或sbin结尾，则<strong>自动回退到上一级目录</strong>。</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ echo $PATH</span><br><span class="line">/opt/ros/noetic/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/names:/snap/bin</span><br></pre></td></tr></table></figure></li>
+</ul>
+<ol start="2">
+<li>上面均是根目录，找到根目录后，cmake会检查这些目录下的文件：</li>
+</ol>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;prefix&gt;/(lib/&lt;arch&gt;|lib|share)/cmake/&lt;name&gt;*/</span><br><span class="line">&lt;prefix&gt;/(lib/&lt;arch&gt;|lib|share)/&lt;name&gt;*/ </span><br><span class="line">&lt;prefix&gt;/(lib/&lt;arch&gt;|lib|share)/&lt;name&gt;*/(cmake|CMake)/</span><br></pre></td></tr></table></figure>
+
+<p>其中，<code>&lt;prefix&gt;</code>表示上面查找的路径<code>&lt;arch&gt;</code>表示系统架构，例如ubuntu系统下一般是：<code>x86_64-linux-gnu</code>，<code>(lib/&lt;arch&gt;|lib|share)</code>表示可选路径，<name>*表示区分大小，且它为包的名字。举个例子若在<code>ubuntu</code>系统下查找<code>opencv</code>库，会查找<code>/usr/lib/x86_64-linux-gnu/OpenCV/</code>、<code>/usr/lib/x86_64-linux-gnu/cmake/OpenCV/</code>、<code>/usr/lib/x86_64-linux-gnu/lib/share/OpenCV/</code>、<code>/usr/lib/x86_64-linux-gnu/share/OpenCV/</code>等。</p>
+<p>在我ubuntu系统的电脑上，我通过该方法，顺利在<code>/usr/lib/x86_64-linux-gnu/cmake/OpenCV</code>找到opencvConfig.cmake文件，该文件里定义了变量&#96;&#96;OpenCV_INCLUDE_DIRS<code>为</code>OpenCV<code>库头文件包含路径，</code>OpenCV_LIBS<code>为</code>OpenCV&#96;链接库路径。这样一来，我们就可以使用在前面说的命令中使用opencv的头文件变量和链接库变量了。</p>
+<p>现在回过头来看查找路径的根目录。我认为最重要的一个是PATH。由于<code>/usr/bin/</code>在PATH中，cmake会自动去<code>/usr/(lib/&lt;arch&gt;|lib|share)/cmake/&lt;name&gt;*/</code>寻找模块，这使得绝大部分我们直接通过apt-get安装的库可以被找到。</p>
+<p>总结：库在采用<code>cmake</code>编译时，会生成<code>xxxConfig.cmake</code>文件(xxx表示库名)，该文件中定义了变量<code>xxx_INCLUDE_DIRS</code>和<code>xxx_LIBRARIES</code>的路径。也就是只要找到<code>xxxConfig.cmake</code>文件，我们就能包含头文件以及链接库了。所以<code>find_package</code>就是为此而诞生的，根据上述搜索方法，顺利找到<code>xxxConfig.cmake</code>配置文件后，会将配置文件的路径定义给<code>OpenCV_DIR</code>。如此一来，每个库的”三兄弟“路径关系便很清晰了。</p>
+<p>注：</p>
+<ol>
+<li>使用<code>find_package</code>(包名，REQUIRED)这里的包名是严格区分大小写的；例如<code>OpenCV</code>写成<code>opencv</code>便找不到<code>OpenCVConfig.cmake</code>配置文件了，再如Eigen3写成eigen3也是找不到eigen3库的；</li>
+<li>包的三兄弟<code>$&#123;xxx_DIR&#125;</code>、<code>$&#123;xxx_INCLUDE_DIRS&#125;</code>和<code>$&#123;xxx_LIBS&#125;</code>也区分大小的；例如<code>$&#123;OpenCV_libs&#125;</code>和<code>$&#123;oPEN_CV_LIBS&#125;</code>是不一样的，链接时会报错,t，通过测试发现xxx写库名或者xxx全部大写是能找到包的；</li>
+<li>如果编译代码时，发现<code>xxxConfig.cmake</code>找不到，说明该库没有编译(默认已安装该库且库大小写没写错)，因为编译该库会生成该库的配置文件，一旦在<code>CMakeLists</code>中使用<code>find_package</code>命令，根据以上介绍内容绝对能找到！因此，回过头找到该库单独编译一下或者放到准备编译某代码的同一路径下一起编译！</li>
+</ol>
+<p><strong>实战：</strong>在SLAM诸多算法中，在<code>CMakeLists</code>文件常常看到这一句<code>find_package(catkin REQUIRED COMPONENTS tf roscpp ...)</code>，这该如何理解呢？首先根据上述方法，我在PATH路径下，即：<code>/opt/ros/noetic/share/catkin/cmake/</code>路径下，找到<code>catkinConfig.cmake</code>文件，该文件中定义了<code>catkin_LIBRARIES</code>和<code>catkin_INCLUDE_DIRS</code>，现在大哥都找到了，各小弟找到有难度吗？</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a target="_blank" rel="noopener" href="https://zwyyds.com">W.Zhow</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a target="_blank" rel="noopener" href="https://zwyyds.com/2023/07/25/CMakeLists/">https://zwyyds.com/2023/07/25/CMakeLists/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">听雨</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/C/">C++</a></div><div class="post_share"><div class="social-share" data-image="/img/4.webp" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i> 打赏</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="/img/weixin.png" target="_blank"><img class="post-qr-code-img" src="/img/weixin.png" alt="微信"/></a><div class="post-qr-code-desc">微信</div></li></ul></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-full"><a href="/2023/07/22/ROS/" title="ROS"><img class="cover" src="/img/2.webp" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">ROS</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2023/07/25/C++libraires/" title="Linux系统下C++库安装使用"><img class="cover" src="/img/7.webp" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-07-25</div><div class="title">Linux系统下C++库安装使用</div></div></a></div><div><a href="/2023/07/26/Eigen%E5%AD%A6%E4%B9%A0/" title="Eigen知识大全"><img class="cover" src="/img/9.webp" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-07-26</div><div class="title">Eigen知识大全</div></div></a></div><div><a href="/2023/07/22/ROS/" title="ROS"><img class="cover" src="/img/2.webp" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-07-22</div><div class="title">ROS</div></div></a></div><div><a href="/2023/07/22/hello-world/" title="C++智能指针"><img class="cover" src="/img/1.webp" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-07-22</div><div class="title">C++智能指针</div></div></a></div></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="lv-container" data-id="city" data-uid="MTAyMC81ODc1OC8zNTIyMA=="></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/qq.jpeg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">W.Zhow</div><div class="author-info__description">没有未来的未来，不是我想要的未来</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">7</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">5</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/zhouwei35"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/zhouwei35" target="_blank" title="Github"><i class="fab fa-github" style="color: #4a7dbe;"></i></a><a class="social-icon" href="mailto:zhouweiqaq@163.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a><a class="social-icon" href="https://weibo.com/u/5940198546" target="_blank" title="weibo"><i class="fab fa-weibo" style="color: #4a7dbe;"></i></a><a class="social-icon" href="https://blog.csdn.net/weixin_42068054?type=blog" target="_blank" title="CSDN"><i class="fab fa-codiepie" style="color: #4a7dbe;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">W.Zhou的学习分享小破站</div><timing> </timing></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#CMakeLists-txt%E7%BC%96%E5%86%99%E5%85%A5%E9%97%A8"><span class="toc-number">1.</span> <span class="toc-text">CMakeLists.txt编写入门</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E5%AD%98%E5%9C%A8%EF%BC%9F"><span class="toc-number">1.1.</span> <span class="toc-text">为什么存在？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="toc-number">1.2.</span> <span class="toc-text">是什么？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%8E%E4%B9%88%E7%94%A8%EF%BC%9F"><span class="toc-number">1.3.</span> <span class="toc-text">怎么用？</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2023/07/28/%E7%BB%98%E5%88%B6PR%E6%9B%B2%E7%BA%BF%E4%BB%A3%E7%A0%81%E8%A7%A3%E6%9E%90/" title="PR曲线绘制"><img src="/img/9.webp" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="PR曲线绘制"/></a><div class="content"><a class="title" href="/2023/07/28/%E7%BB%98%E5%88%B6PR%E6%9B%B2%E7%BA%BF%E4%BB%A3%E7%A0%81%E8%A7%A3%E6%9E%90/" title="PR曲线绘制">PR曲线绘制</a><time datetime="2023-07-27T16:00:00.000Z" title="发表于 2023-07-28 00:00:00">2023-07-28</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/07/26/Eigen%E5%AD%A6%E4%B9%A0/" title="Eigen知识大全"><img src="/img/9.webp" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Eigen知识大全"/></a><div class="content"><a class="title" href="/2023/07/26/Eigen%E5%AD%A6%E4%B9%A0/" title="Eigen知识大全">Eigen知识大全</a><time datetime="2023-07-25T16:00:00.000Z" title="发表于 2023-07-26 00:00:00">2023-07-26</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/07/25/C++libraires/" title="Linux系统下C++库安装使用"><img src="/img/7.webp" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Linux系统下C++库安装使用"/></a><div class="content"><a class="title" href="/2023/07/25/C++libraires/" title="Linux系统下C++库安装使用">Linux系统下C++库安装使用</a><time datetime="2023-07-24T16:00:00.000Z" title="发表于 2023-07-25 00:00:00">2023-07-25</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/07/24/SLAM14%E8%AE%B2%E7%AC%AC%E4%B8%80%E7%AB%A0/" title="SLAM十四讲第1-2讲"><img src="/img/5.webp" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="SLAM十四讲第1-2讲"/></a><div class="content"><a class="title" href="/2023/07/24/SLAM14%E8%AE%B2%E7%AC%AC%E4%B8%80%E7%AB%A0/" title="SLAM十四讲第1-2讲">SLAM十四讲第1-2讲</a><time datetime="2023-07-23T16:00:00.000Z" title="发表于 2023-07-24 00:00:00">2023-07-24</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/07/22/hello-world/" title="C++智能指针"><img src="/img/1.webp" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="C++智能指针"/></a><div class="content"><a class="title" href="/2023/07/22/hello-world/" title="C++智能指针">C++智能指针</a><time datetime="2023-07-22T10:20:00.000Z" title="发表于 2023-07-22 18:20:00">2023-07-22</time></div></div></div></div></div></div></main><footer id="footer" style="background: rgba(255,255,255,0)"><div id="footer-wrap"><div class="copyright">&copy;2023 By W.Zhow</div><div class="footer_custom_text">一花一世界</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"><script>function loadLivere () {
+  if (typeof LivereTower === 'object') {
+    window.LivereTower.init()
+  }
+  else {
+    (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+    })(document, 'script');
+  }
+}
+
+if ('Livere' === 'Livere' || !false) {
+  if (false) btf.loadComment(document.getElementById('lv-container'), loadLivere)
+  else loadLivere()
+}
+else {
+  function loadOtherComment () {
+    loadLivere()
+  }
+}</script></div><script src="/js/timing.js"></script><script src="/js/snowflake.js"></script><script src="/js/pageend.js"></script><script defer="defer" id="fluttering_ribbon" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-fluttering-ribbon.min.js"></script><script id="canvas_nest" defer="defer" color="0,0,255" opacity="1" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div class="no-result" id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div><!-- hexo injector body_end start --><script data-pjax>
+  function butterfly_swiper_injector_config(){
+    var parent_div_git = document.getElementById('recent-posts');
+    var item_html = '<div class="recent-post-item" style="height: auto;width: 100%"><div class="blog-slider swiper-container-fade swiper-container-horizontal" id="swiper_container"><div class="blog-slider__wrp swiper-wrapper" style="transition-duration: 0ms;"><div class="blog-slider__item swiper-slide" style="width: 750px; opacity: 1; transform: translate3d(0px, 0px, 0px); transition-duration: 0ms;"><a class="blog-slider__img" href="2023/07/28/绘制PR曲线代码解析/" alt=""><img width="48" height="48" src="/img/9.webp" alt="" onerror="this.src=https://unpkg.zhimg.com/akilar-candyassets/image/loading.gif; this.onerror = null;"/></a><div class="blog-slider__content"><span class="blog-slider__code">2023-07-28</span><a class="blog-slider__title" href="2023/07/28/绘制PR曲线代码解析/" alt="">PR曲线绘制</a><div class="blog-slider__text">细细品味：find_package查找库的规律是如此的巧妙，库的安装也是如此~给我一个库，我如何能够让find_package找到它呢？这就是本文的重点！！！</div><a class="blog-slider__button" href="2023/07/28/绘制PR曲线代码解析/" alt="">详情   </a></div></div><div class="blog-slider__item swiper-slide" style="width: 750px; opacity: 1; transform: translate3d(0px, 0px, 0px); transition-duration: 0ms;"><a class="blog-slider__img" href="2023/07/25/C++libraires/" alt=""><img width="48" height="48" src="/img/7.webp" alt="" onerror="this.src=https://unpkg.zhimg.com/akilar-candyassets/image/loading.gif; this.onerror = null;"/></a><div class="blog-slider__content"><span class="blog-slider__code">2023-07-25</span><a class="blog-slider__title" href="2023/07/25/C++libraires/" alt="">Linux系统下C++库安装使用</a><div class="blog-slider__text">细细品味：find_package查找库的规律是如此的巧妙，库的安装也是如此~给我一个库，我如何能够让find_package找到它呢？这就是本文的重点！！！</div><a class="blog-slider__button" href="2023/07/25/C++libraires/" alt="">详情   </a></div></div><div class="blog-slider__item swiper-slide" style="width: 750px; opacity: 1; transform: translate3d(0px, 0px, 0px); transition-duration: 0ms;"><a class="blog-slider__img" href="2023/07/26/Eigen学习/" alt=""><img width="48" height="48" src="/img/9.webp" alt="" onerror="this.src=https://unpkg.zhimg.com/akilar-candyassets/image/loading.gif; this.onerror = null;"/></a><div class="blog-slider__content"><span class="blog-slider__code">2023-07-26</span><a class="blog-slider__title" href="2023/07/26/Eigen学习/" alt="">Eigen知识大全</a><div class="blog-slider__text">Eigen是一个用于线性代数和数值计算的C++模板库，它提供了一系列高性能的矩阵、向量、数值计算和线性代数运算的功能。比如，你可以用Eigen来表示和操作矩阵，进行矩阵相乘、加减运算，计算特征值和特征向量等。</div><a class="blog-slider__button" href="2023/07/26/Eigen学习/" alt="">详情   </a></div></div><div class="blog-slider__item swiper-slide" style="width: 750px; opacity: 1; transform: translate3d(0px, 0px, 0px); transition-duration: 0ms;"><a class="blog-slider__img" href="2023/07/24/SLAM14讲第一章/" alt=""><img width="48" height="48" src="/img/5.webp" alt="" onerror="this.src=https://unpkg.zhimg.com/akilar-candyassets/image/loading.gif; this.onerror = null;"/></a><div class="blog-slider__content"><span class="blog-slider__code">2023-07-24</span><a class="blog-slider__title" href="2023/07/24/SLAM14讲第一章/" alt="">SLAM十四讲第1-2讲</a><div class="blog-slider__text">想象一下，你是一个小机器人，置身于一个完全陌生的房间里，你不知道自己在房间的哪个位置，也不知道房间的结构和布局是怎样的。你的目标是能够自主地在这个房间里行走，找到出口，并且把房间的地图画出来！</div><a class="blog-slider__button" href="2023/07/24/SLAM14讲第一章/" alt="">详情   </a></div></div><div class="blog-slider__item swiper-slide" style="width: 750px; opacity: 1; transform: translate3d(0px, 0px, 0px); transition-duration: 0ms;"><a class="blog-slider__img" href="2023/07/22/CMakeLists/" alt=""><img width="48" height="48" src="/img/4.webp" alt="" onerror="this.src=https://unpkg.zhimg.com/akilar-candyassets/image/loading.gif; this.onerror = null;"/></a><div class="blog-slider__content"><span class="blog-slider__code">2023-07-22</span><a class="blog-slider__title" href="2023/07/22/CMakeLists/" alt="">CMakeLists.txt入门到大成</a><div class="blog-slider__text">借用黑格尔的名言“存在即合理”，既然CMakeList.txt被设计出来，就有它的一个道理！这样想来！我们内心对它的畏惧是不是就减少了呢！那~现在让我们从“它为什么存在”，“它是什么”以及“它怎么用”三个角度深刻剖析！</div><a class="blog-slider__button" href="2023/07/22/CMakeLists/" alt="">详情   </a></div></div><div class="blog-slider__item swiper-slide" style="width: 750px; opacity: 1; transform: translate3d(0px, 0px, 0px); transition-duration: 0ms;"><a class="blog-slider__img" href="2023/07/22/hello-world/" alt=""><img width="48" height="48" src="/img/1.webp" alt="" onerror="this.src=https://unpkg.zhimg.com/akilar-candyassets/image/loading.gif; this.onerror = null;"/></a><div class="blog-slider__content"><span class="blog-slider__code">2023-07-22</span><a class="blog-slider__title" href="2023/07/22/hello-world/" alt="">C++智能指针</a><div class="blog-slider__text">W.Zhou的小破站~</div><a class="blog-slider__button" href="2023/07/22/hello-world/" alt="">详情   </a></div></div><div class="blog-slider__item swiper-slide" style="width: 750px; opacity: 1; transform: translate3d(0px, 0px, 0px); transition-duration: 0ms;"><a class="blog-slider__img" href="2023/07/22/ROS/" alt=""><img width="48" height="48" src="/img/2.webp" alt="" onerror="this.src=https://unpkg.zhimg.com/akilar-candyassets/image/loading.gif; this.onerror = null;"/></a><div class="blog-slider__content"><span class="blog-slider__code">2023-07-22</span><a class="blog-slider__title" href="2023/07/22/ROS/" alt="">ROS</a><div class="blog-slider__text">W.Zhou的小破站~</div><a class="blog-slider__button" href="2023/07/22/ROS/" alt="">详情   </a></div></div></div><div class="blog-slider__pagination swiper-pagination-clickable swiper-pagination-bullets"></div></div></div>';
+    console.log('已挂载butterfly_swiper')
+    parent_div_git.insertAdjacentHTML("afterbegin",item_html)
+    }
+  var elist = 'undefined'.split(',');
+  var cpage = location.pathname;
+  var epage = 'all';
+  var flag = 0;
+
+  for (var i=0;i<elist.length;i++){
+    if (cpage.includes(elist[i])){
+      flag++;
+    }
+  }
+
+  if ((epage ==='all')&&(flag == 0)){
+    butterfly_swiper_injector_config();
+  }
+  else if (epage === cpage){
+    butterfly_swiper_injector_config();
+  }
+  </script><script defer src="https://npm.elemecdn.com/hexo-butterfly-swiper/lib/swiper.min.js"></script><script defer data-pjax src="https://npm.elemecdn.com/hexo-butterfly-swiper/lib/swiper_init.js"></script><!-- hexo injector body_end end --></body></html>
