@@ -162,14 +162,14 @@
   </url>
   
   <url>
-    <loc>http://example.com/tags/Eigen/</loc>
+    <loc>http://example.com/tags/Ros/</loc>
     <lastmod>2023-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>http://example.com/tags/Ros/</loc>
+    <loc>http://example.com/tags/Eigen/</loc>
     <lastmod>2023-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -206,6 +206,13 @@
   </url>
   
   <url>
+    <loc>http://example.com/categories/C/Eigen/</loc>
+    <lastmod>2023-07-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
     <loc>http://example.com/categories/C/CMake/</loc>
     <lastmod>2023-07-28</lastmod>
     <changefreq>weekly</changefreq>
@@ -214,13 +221,6 @@
   
   <url>
     <loc>http://example.com/categories/SLAM/</loc>
-    <lastmod>2023-07-28</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>http://example.com/categories/C/Eigen/</loc>
     <lastmod>2023-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
